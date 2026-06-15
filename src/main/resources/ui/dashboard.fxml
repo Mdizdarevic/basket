@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.morenod.basket.fx.DashboardController"
+            prefWidth="1100.0" prefHeight="700.0" stylesheets="@style.css">
+    
+    <left>
+        <VBox spacing="10" styleClass="sidebar" prefWidth="260">
+            <padding>
+                <Insets top="35" right="25" bottom="35" left="25"/>
+            </padding>
+            
+            <HBox spacing="14" alignment="CENTER_LEFT">
+                <ImageView fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Basket_Logo.png"/>
+                    </image>
+                </ImageView>
+                <VBox alignment="CENTER_LEFT">
+                    <HBox spacing="6" alignment="BOTTOM_LEFT">
+                        <Label text="BASKET" styleClass="sidebar-brand"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+        
+            
+            <Region prefHeight="40.0" />
+            
+            <Button text="Live Donations" styleClass="sidebar-btn, active-btn" maxWidth="Infinity"/>
+            <Button fx:id="btnBackup" text="System Backup" styleClass="sidebar-btn" maxWidth="Infinity" onAction="#handleBackup"/>
+            <Button fx:id="btnRestore" text="Restore Data" styleClass="sidebar-btn" maxWidth="Infinity" onAction="#handleRestore"/>
+            
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label text="Logged in as: Admin" styleClass="sidebar-footer"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="25" styleClass="main-content">
+            <padding>
+                <Insets top="35" right="45" bottom="35" left="45"/>
+            </padding>
+            
+            <HBox alignment="CENTER_LEFT">
+                <VBox>
+                    <Label text="Live Donations Dashboard" styleClass="greeting-text"/>
+                </VBox>
+            </HBox>
+            
+            <HBox spacing="20" alignment="CENTER">
+                <HBox spacing="15" styleClass="card" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" prefHeight="95">
+                    <padding><Insets left="15" right="15"/></padding>
+                    <StackPane styleClass="stat-icon-bg, bg-total" />
+                    <VBox alignment="CENTER_LEFT">
+                        <Label text="Total Items" styleClass="stat-label"/>
+                        <Label fx:id="lblTotalItems" text="0" styleClass="stat-value"/>
+                    </VBox>
+                </HBox>
+                
+                <HBox spacing="15" styleClass="card" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" prefHeight="95">
+                    <padding><Insets left="15" right="15"/></padding>
+                    <StackPane styleClass="stat-icon-bg, bg-pending" />
+                    <VBox alignment="CENTER_LEFT">
+                        <Label text="Total Pending" styleClass="stat-label"/>
+                        <Label fx:id="lblTotalPending" text="0" styleClass="stat-value"/>
+                    </VBox>
+                </HBox>
+                
+                <HBox spacing="15" styleClass="card" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" prefHeight="95">
+                    <padding><Insets left="15" right="15"/></padding>
+                    <StackPane styleClass="stat-icon-bg, bg-approved" />
+                    <VBox alignment="CENTER_LEFT">
+                        <Label text="Total Approved" styleClass="stat-label"/>
+                        <Label fx:id="lblTotalApproved" text="0" styleClass="stat-value"/>
+                    </VBox>
+                </HBox>
+                
+                <HBox spacing="15" styleClass="card" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" prefHeight="95">
+                    <padding><Insets left="15" right="15"/></padding>
+                    <StackPane styleClass="stat-icon-bg, bg-distributed" />
+                    <VBox alignment="CENTER_LEFT">
+                        <Label text="Total Distributed" styleClass="stat-label"/>
+                        <Label fx:id="lblTotalDistributed" text="0" styleClass="stat-value"/>
+                    </VBox>
+                </HBox>
+            </HBox>
+            
+            <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10">
+                <padding>
+                    <Insets top="25" right="25" bottom="25" left="25"/>
+                </padding>
+                
+                <VBox spacing="2">
+                    <Label text="All Donations" styleClass="card-title"/>
+                    <Label text="Active Inventory Items" styleClass="card-subtitle"/>
+                </VBox>
+                
+                <TableView fx:id="donationsTable" editable="true" VBox.vgrow="ALWAYS">
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                        <TableColumn fx:id="colName" text="Item Name" prefWidth="240"/>
+                        <TableColumn fx:id="colCategory" text="Category" prefWidth="150"/>
+                        <TableColumn fx:id="colQuantity" text="Qty" prefWidth="70"/>
+                        <TableColumn fx:id="colDateEntered" text="Date Entered" prefWidth="120"/>
+                        <TableColumn fx:id="colStatus" text="Status" prefWidth="120"/>
+                        <TableColumn fx:id="colAction" text="Action" prefWidth="95"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <HBox spacing="15" alignment="CENTER_LEFT" styleClass="card">
+                <padding>
+                    <Insets top="15" right="20" bottom="15" left="20"/>
+                </padding>
+                <TextField fx:id="txtItemName" promptText="Item Name (e.g., Milk)" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="txtCategory" promptText="Category" prefWidth="160"/>
+                <TextField fx:id="txtQuantity" promptText="Qty" prefWidth="80"/>
+                <TextField fx:id="txtDateEntered" promptText="Date Entered (DD.MM.YYYY)" prefWidth="170"/>
+                <Button text="Add Item" styleClass="btn-success" onAction="#handleCreate"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

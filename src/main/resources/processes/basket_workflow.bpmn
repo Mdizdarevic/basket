@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_04aw640" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.48.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
+  <bpmn:process id="basket-intake-workflow" name="Basket Intake Workflow" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1" name="Donation Basket Received">
+      <bpmn:outgoing>Flow_0ewjc6l</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0ewjc6l" sourceRef="StartEvent_1" targetRef="Activity_0jdx1d3" />
+    <bpmn:exclusiveGateway id="Gateway_112d2pg" name="Is Bulk Donation?">
+      <bpmn:incoming>Flow_155l0u7</bpmn:incoming>
+      <bpmn:outgoing>Flow_156sdv9</bpmn:outgoing>
+      <bpmn:outgoing>Flow_11tg062</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1l3x97x" sourceRef="Activity_0jdx1d3" targetRef="Activity_0piyz08" />
+    <bpmn:sequenceFlow id="Flow_156sdv9" name="${itemQuantity &#62; 1000}" sourceRef="Gateway_112d2pg" targetRef="Activity_1fwk7bl" />
+    <bpmn:userTask id="Activity_1fwk7bl" name="Verify Capacity">
+      <bpmn:incoming>Flow_156sdv9</bpmn:incoming>
+      <bpmn:outgoing>Flow_09t4rwp</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_12g7yxf" name="Sync Basket Payload (POST)" camunda:expression="${execution.setVariable(&#39;postResponse&#39;, &#39;{&#34;message&#34;:&#34;Basket saved&#34;, &#34;id&#34;: 991}&#39;)}">
+      <bpmn:incoming>Flow_09t4rwp</bpmn:incoming>
+      <bpmn:incoming>Flow_11tg062</bpmn:incoming>
+      <bpmn:outgoing>Flow_18z73dk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_100uhx4" name="Inventory Updated">
+      <bpmn:incoming>Flow_09iifzq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_18z73dk" sourceRef="Activity_12g7yxf" targetRef="Activity_1gtdpf5" />
+    <bpmn:sequenceFlow id="Flow_09t4rwp" sourceRef="Activity_1fwk7bl" targetRef="Activity_12g7yxf" />
+    <bpmn:sequenceFlow id="Flow_155l0u7" sourceRef="Activity_0piyz08" targetRef="Gateway_112d2pg" />
+    <bpmn:sequenceFlow id="Flow_1jta5v9" sourceRef="Activity_1gtdpf5" targetRef="Activity_0d31xvk" />
+    <bpmn:sequenceFlow id="Flow_09iifzq" sourceRef="Activity_0d31xvk" targetRef="Event_100uhx4" />
+    <bpmn:sequenceFlow id="Flow_11tg062" name="${itemQuantity &#60;= 1000}" sourceRef="Gateway_112d2pg" targetRef="Activity_12g7yxf">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_1gtdpf5" name="Update Allocation Totals (PUT)" camunda:expression="${execution.setVariable(&#39;putResponse&#39;, &#39;{&#34;message&#34;:&#34;Stock updated&#34;}&#39;)}">
+      <bpmn:incoming>Flow_18z73dk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1jta5v9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0d31xvk" name="Purge Temporary Session Cache (DELETE)" camunda:expression="${execution.setVariable(&#39;deleteResponse&#39;, &#39;{&#34;cacheCleared&#34;: true}&#39;)}">
+      <bpmn:incoming>Flow_1jta5v9</bpmn:incoming>
+      <bpmn:outgoing>Flow_09iifzq</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0piyz08" name="Fetch Inventory Metrics (GET)" camunda:expression="${execution.setVariable(&#39;inventoryDetails&#39;, &#39;{&#34;status&#34;:&#34;success&#34;, &#34;count&#34;: 1250}&#39;)}">
+      <bpmn:incoming>Flow_1l3x97x</bpmn:incoming>
+      <bpmn:outgoing>Flow_155l0u7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_0jdx1d3" name="Register Basket Payload">
+      <bpmn:incoming>Flow_0ewjc6l</bpmn:incoming>
+      <bpmn:outgoing>Flow_1l3x97x</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="basket-intake-workflow">
+      <bpmndi:BPMNShape id="Gateway_112d2pg_di" bpmnElement="Gateway_112d2pg" isMarkerVisible="true">
+        <dc:Bounds x="625" y="155" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="606" y="131" width="87" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1wsankx_di" bpmnElement="Activity_1fwk7bl">
+        <dc:Bounds x="810" y="50" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06xm56z_di" bpmnElement="Activity_12g7yxf">
+        <dc:Bounds x="810" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="202" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="205" width="130" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_100uhx4_di" bpmnElement="Event_100uhx4">
+        <dc:Bounds x="1112" y="52" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1085" y="95" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0avpzf2_di" bpmnElement="Activity_1gtdpf5">
+        <dc:Bounds x="960" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vgz3ig_di" bpmnElement="Activity_0d31xvk">
+        <dc:Bounds x="1041" y="130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ql84cl_di" bpmnElement="Activity_0piyz08">
+        <dc:Bounds x="460" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0a5n825_di" bpmnElement="Activity_0jdx1d3">
+        <dc:Bounds x="310" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_155l0u7_di" bpmnElement="Flow_155l0u7">
+        <di:waypoint x="560" y="180" />
+        <di:waypoint x="625" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_156sdv9_di" bpmnElement="Flow_156sdv9">
+        <di:waypoint x="675" y="180" />
+        <di:waypoint x="730" y="180" />
+        <di:waypoint x="730" y="90" />
+        <di:waypoint x="810" y="90" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="704" y="135" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11tg062_di" bpmnElement="Flow_11tg062">
+        <di:waypoint x="650" y="205" />
+        <di:waypoint x="650" y="270" />
+        <di:waypoint x="810" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="606" y="218" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09t4rwp_di" bpmnElement="Flow_09t4rwp">
+        <di:waypoint x="860" y="130" />
+        <di:waypoint x="860" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18z73dk_di" bpmnElement="Flow_18z73dk">
+        <di:waypoint x="910" y="270" />
+        <di:waypoint x="960" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ewjc6l_di" bpmnElement="Flow_0ewjc6l">
+        <di:waypoint x="238" y="180" />
+        <di:waypoint x="310" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1l3x97x_di" bpmnElement="Flow_1l3x97x">
+        <di:waypoint x="410" y="180" />
+        <di:waypoint x="460" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jta5v9_di" bpmnElement="Flow_1jta5v9">
+        <di:waypoint x="1060" y="270" />
+        <di:waypoint x="1091" y="270" />
+        <di:waypoint x="1091" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09iifzq_di" bpmnElement="Flow_09iifzq">
+        <di:waypoint x="1091" y="130" />
+        <di:waypoint x="1091" y="70" />
+        <di:waypoint x="1112" y="70" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

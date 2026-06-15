@@ -1,0 +1,2 @@
+/* Route: createDonationRoute | Method: POST */
+{"id":null,"itemName":"Milk","category":"Drink","quantity":15,"dateEntered":"06.03.2026","status":"PENDING"}
