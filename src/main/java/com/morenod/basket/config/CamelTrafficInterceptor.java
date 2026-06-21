@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.BufferedReader;
 
 @Component
 public class CamelTrafficInterceptor implements Filter {

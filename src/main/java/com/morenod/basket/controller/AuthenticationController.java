@@ -1,6 +1,5 @@
 package com.morenod.basket.controller;
 
-import com.morenod.basket.model.User;
 import com.morenod.basket.repository.UserRepository;
 import com.morenod.basket.security.JwtUtil;
 
@@ -23,7 +22,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
-        String password = credentials.get("password"); 
+        String password = credentials.get("password");
         
         return userRepository.findByUsername(username)
                 .filter(user -> user.getPassword().equals(password))
