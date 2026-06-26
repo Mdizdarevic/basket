@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration 
 public class DataInitializer {
-
+    // set up defualt data for the database just to test things
     @Bean
     public CommandLineRunner initData(UserRepository userRepo, DonationRepository donationRepo) {
         return args -> {

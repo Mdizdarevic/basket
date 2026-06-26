@@ -48,7 +48,7 @@ public class BackupController {
     @PostMapping("/restore") 
     public ResponseEntity<?> restoreDatabase() {
         File backupFile = new File(BACKUP_FILE_PATH);
-        if (!backupFile.exists()) {
+        if (!backupFile.exists()) { // can't restore without backup existing first!
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                 "status", "ERROR",
                 "message", "Restore failed: No backup file found at " + BACKUP_FILE_PATH

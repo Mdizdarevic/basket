@@ -17,13 +17,13 @@ public class DonationController {
         this.donationRepository = donationRepository;
     }
 
-    // 1. GET ALL
+    // GET ALL
     @GetMapping
     public List<Donation> getAllDonations() {
         return donationRepository.findAll();
     }
 
-    // 2. GET BY ID
+    // GET BY ID
     @GetMapping("/{id}")
     public ResponseEntity<Donation> getDonationById(@PathVariable Long id) {
         return donationRepository.findById(id)
@@ -31,13 +31,13 @@ public class DonationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 3. POST (CREATE)
+    // POST (CREATE)
     @PostMapping
     public Donation createDonation(@RequestBody Donation donation) {
         return donationRepository.save(donation);
     }
 
-    // 4. PUT (UPDATE)
+    // PUT (UPDATE)
     @PutMapping("/{id}")
     public ResponseEntity<Donation> updateDonation(@PathVariable Long id, @RequestBody Donation updatedDonation) {
         return donationRepository.findById(id)
@@ -52,7 +52,7 @@ public class DonationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 5. DELETE
+    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDonation(@PathVariable Long id) {
         if (donationRepository.existsById(id)) {

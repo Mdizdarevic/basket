@@ -157,21 +157,21 @@ public class DashboardController {
     }
 
     private void loadDonationsFromApi() {
-    HttpRequest request = HttpRequest.newBuilder()
+        HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/api/donations"))
             .GET()
             .build();
 
-    httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
             .thenAccept(response -> {
+                // console logging status, http method isn't working
                 System.out.println("HTTP Status Code: " + response.statusCode());
-                
                 String body = response.body();
                 System.out.println("Raw Response Content: " + body);
 
                 Platform.runLater(() -> {
                     try {
-                        if (response.statusCode() == 200) {
+                        if (response.statusCode() == 200) {  
                             Donation[] donations = objectMapper.readValue(body, Donation[].class);
                             donationDataList.setAll(donations);
                             updateMetricsSummaries();
@@ -184,7 +184,7 @@ public class DashboardController {
                     }
                 });
             });
-}
+    }
 
     @FXML
     private void handleCreate() {
@@ -229,7 +229,7 @@ public class DashboardController {
                     return null;
                 });
         } catch (Exception e) {
-            System.out.println("JSON Parsing Breakdown details:");
+            System.out.println("JSON Parsing details:");
             e.printStackTrace(); 
         }
     }
@@ -299,7 +299,7 @@ public class DashboardController {
 
     @FXML
     private void handleRestore() {
-        System.out.println("Initiating database restoration process...");
+        System.out.println("Initiating database restore process...");
         
         if (this.backupJsonData == null) {
             System.out.println("Abort: Cannot restore database state. No backup snapshot has been captured yet!");
@@ -326,5 +326,10 @@ public class DashboardController {
                     System.out.println("Network request failure: " + ex.getMessage());
                     return null;
                 });
+    }
+    @FXML
+    private void handleRefresh() {
+        donationDataList.clear();
+        loadDonationsFromApi();
     }
 }

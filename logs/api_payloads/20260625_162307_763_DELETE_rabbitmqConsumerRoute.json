@@ -1,0 +1,4 @@
+{
+  "routeId": "rabbitmqConsumerRoute",
+  "httpMethod": "DELETE",
+  "id":1}

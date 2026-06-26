@@ -47,10 +47,11 @@
                 <Insets top="35" right="45" bottom="35" left="45"/>
             </padding>
             
-            <HBox alignment="CENTER_LEFT">
-                <VBox>
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox HBox.hgrow="ALWAYS">
                     <Label text="Live Donations Dashboard" styleClass="greeting-text"/>
                 </VBox>
+                <Button fx:id="btnRefresh" text="Refresh Table" styleClass="sidebar-btn" onAction="#handleRefresh"/>
             </HBox>
             
             <HBox spacing="20" alignment="CENTER">

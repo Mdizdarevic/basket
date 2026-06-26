@@ -1,0 +1,5 @@
+{
+  "routeId": "rabbitmqConsumerRoute",
+  "httpMethod": "GET",
+  "info": "Empty body or No Content response"
+}

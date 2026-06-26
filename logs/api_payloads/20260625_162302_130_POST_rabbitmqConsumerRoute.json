@@ -1,0 +1,4 @@
+{
+  "routeId": "rabbitmqConsumerRoute",
+  "httpMethod": "POST",
+  "id":null,"itemName":"Bottled Water Case","category":"Drink","quantity":50,"dateEntered":"25.06.2026","status":"PENDING"}

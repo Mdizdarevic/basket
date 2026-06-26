@@ -1,0 +1,10 @@
+{
+  "routeId": "rabbitmqConsumerRoute",
+  "httpMethod": "POST",
+  "id":null,
+  "itemName":"Orange juice",
+  "category":"Drink",
+  "quantity":50,
+  "dateEntered":"05.06.2026",
+  "status":"PENDING"
+}

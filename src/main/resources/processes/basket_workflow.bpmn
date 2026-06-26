@@ -16,7 +16,33 @@
       <bpmn:incoming>Flow_156sdv9</bpmn:incoming>
       <bpmn:outgoing>Flow_09t4rwp</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_12g7yxf" name="Sync Basket Payload (POST)" camunda:expression="${execution.setVariable(&#39;postResponse&#39;, &#39;{&#34;message&#34;:&#34;Basket saved&#34;, &#34;id&#34;: 991}&#39;)}">
+    <bpmn:serviceTask id="Activity_12g7yxf" name="Sync Basket Payload (POST)">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8080/api/donations</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="javascript">JSON.stringify({
+  "itemName": execution.getVariable("itemName"),
+  "category": execution.getVariable("category"),
+  "quantity": Number(execution.getVariable("itemQuantity")),
+  "dateEntered": execution.getVariable("dateEntered"),
+  "status": "PENDING"
+});</camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="postResponse">
+              <camunda:script scriptFormat="javascript">response;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_09t4rwp</bpmn:incoming>
       <bpmn:incoming>Flow_11tg062</bpmn:incoming>
       <bpmn:outgoing>Flow_18z73dk</bpmn:outgoing>
@@ -32,15 +58,62 @@
     <bpmn:sequenceFlow id="Flow_11tg062" name="${itemQuantity &#60;= 1000}" sourceRef="Gateway_112d2pg" targetRef="Activity_12g7yxf">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Activity_1gtdpf5" name="Update Allocation Totals (PUT)" camunda:expression="${execution.setVariable(&#39;putResponse&#39;, &#39;{&#34;message&#34;:&#34;Stock updated&#34;}&#39;)}">
+    <bpmn:serviceTask id="Activity_1gtdpf5" name="Update Allocation Totals (PUT)">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8080/api/donations</camunda:inputParameter>
+            <camunda:inputParameter name="method">PUT</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="javascript">```javascript
+JSON.stringify({
+"status": "ALLOCATED"
+});</camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="putResponse">
+              <camunda:script scriptFormat="javascript">response;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_18z73dk</bpmn:incoming>
       <bpmn:outgoing>Flow_1jta5v9</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_0d31xvk" name="Purge Temporary Session Cache (DELETE)" camunda:expression="${execution.setVariable(&#39;deleteResponse&#39;, &#39;{&#34;cacheCleared&#34;: true}&#39;)}">
+    <bpmn:serviceTask id="Activity_0d31xvk" name="Purge Temporary Session Cache (DELETE)">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8080/api/donations</camunda:inputParameter>
+            <camunda:inputParameter name="method">DELETE</camunda:inputParameter>
+            <camunda:outputParameter name="deleteResponse">
+              <camunda:script scriptFormat="javascript">response;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1jta5v9</bpmn:incoming>
       <bpmn:outgoing>Flow_09iifzq</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_0piyz08" name="Fetch Inventory Metrics (GET)" camunda:expression="${execution.setVariable(&#39;inventoryDetails&#39;, &#39;{&#34;status&#34;:&#34;success&#34;, &#34;count&#34;: 1250}&#39;)}">
+    <bpmn:serviceTask id="Activity_0piyz08" name="Fetch Inventory Metrics (GET)">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">http://localhost:8080/api/donations</camunda:inputParameter>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:outputParameter name="inventoryDetails">
+              <camunda:script scriptFormat="javascript">response;</camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1l3x97x</bpmn:incoming>
       <bpmn:outgoing>Flow_155l0u7</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -51,6 +124,12 @@
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="basket-intake-workflow">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="202" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="205" width="130" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_112d2pg_di" bpmnElement="Gateway_112d2pg" isMarkerVisible="true">
         <dc:Bounds x="625" y="155" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -63,12 +142,6 @@
       <bpmndi:BPMNShape id="Activity_06xm56z_di" bpmnElement="Activity_12g7yxf">
         <dc:Bounds x="810" y="230" width="100" height="80" />
         <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
-        <dc:Bounds x="202" y="162" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="155" y="205" width="130" height="14" />
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_100uhx4_di" bpmnElement="Event_100uhx4">
         <dc:Bounds x="1112" y="52" width="36" height="36" />
@@ -88,9 +161,13 @@
       <bpmndi:BPMNShape id="Activity_0a5n825_di" bpmnElement="Activity_0jdx1d3">
         <dc:Bounds x="310" y="140" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_155l0u7_di" bpmnElement="Flow_155l0u7">
-        <di:waypoint x="560" y="180" />
-        <di:waypoint x="625" y="180" />
+      <bpmndi:BPMNEdge id="Flow_0ewjc6l_di" bpmnElement="Flow_0ewjc6l">
+        <di:waypoint x="238" y="180" />
+        <di:waypoint x="310" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1l3x97x_di" bpmnElement="Flow_1l3x97x">
+        <di:waypoint x="410" y="180" />
+        <di:waypoint x="460" y="180" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_156sdv9_di" bpmnElement="Flow_156sdv9">
         <di:waypoint x="675" y="180" />
@@ -101,29 +178,17 @@
           <dc:Bounds x="704" y="135" width="82" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_11tg062_di" bpmnElement="Flow_11tg062">
-        <di:waypoint x="650" y="205" />
-        <di:waypoint x="650" y="270" />
-        <di:waypoint x="810" y="270" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="606" y="218" width="88" height="27" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="Flow_18z73dk_di" bpmnElement="Flow_18z73dk">
+        <di:waypoint x="910" y="270" />
+        <di:waypoint x="960" y="270" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_09t4rwp_di" bpmnElement="Flow_09t4rwp">
         <di:waypoint x="860" y="130" />
         <di:waypoint x="860" y="230" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_18z73dk_di" bpmnElement="Flow_18z73dk">
-        <di:waypoint x="910" y="270" />
-        <di:waypoint x="960" y="270" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0ewjc6l_di" bpmnElement="Flow_0ewjc6l">
-        <di:waypoint x="238" y="180" />
-        <di:waypoint x="310" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1l3x97x_di" bpmnElement="Flow_1l3x97x">
-        <di:waypoint x="410" y="180" />
-        <di:waypoint x="460" y="180" />
+      <bpmndi:BPMNEdge id="Flow_155l0u7_di" bpmnElement="Flow_155l0u7">
+        <di:waypoint x="560" y="180" />
+        <di:waypoint x="625" y="180" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1jta5v9_di" bpmnElement="Flow_1jta5v9">
         <di:waypoint x="1060" y="270" />
@@ -134,6 +199,14 @@
         <di:waypoint x="1091" y="130" />
         <di:waypoint x="1091" y="70" />
         <di:waypoint x="1112" y="70" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11tg062_di" bpmnElement="Flow_11tg062">
+        <di:waypoint x="650" y="205" />
+        <di:waypoint x="650" y="270" />
+        <di:waypoint x="810" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="606" y="218" width="88" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
