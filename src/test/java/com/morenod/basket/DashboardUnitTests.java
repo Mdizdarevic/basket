@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Tag("ui")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DashboardUnitTests {
 
@@ -157,6 +158,7 @@ class DashboardUnitTests {
         
         assertDoesNotThrow(() -> m.invoke(controller, (Donation) null));
     }
+
 
     @Test
     void testHandleRestoreNetworkFailureSimulation() throws Exception {

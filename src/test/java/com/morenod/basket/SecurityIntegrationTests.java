@@ -15,15 +15,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class SecurityIntegrationTests {
 
-    private final MockMvc mockMvc;
-    private final JwtUtil jwtUtil;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
-    public SecurityIntegrationTests(MockMvc mockMvc, JwtUtil jwtUtil) {
-        this.mockMvc = mockMvc;
-        this.jwtUtil = jwtUtil;
-    }
-
+    private JwtUtil jwtUtil;
+    
     @Test
     void testPublicEndpointReturns200() throws Exception {
         mockMvc.perform(get("/api/donations")).andExpect(status().isOk());
