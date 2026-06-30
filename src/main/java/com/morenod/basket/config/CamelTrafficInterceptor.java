@@ -1,7 +1,6 @@
 package com.morenod.basket.config;
 
 import org.apache.camel.ProducerTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,8 +9,12 @@ import java.io.IOException;
 @Component
 public class CamelTrafficInterceptor implements Filter {
 
-    @Autowired
-    private ProducerTemplate producerTemplate;
+    // constructor instead of autowired
+    private final ProducerTemplate producerTemplate;
+
+    public CamelTrafficInterceptor(ProducerTemplate producerTemplate) {
+        this.producerTemplate = producerTemplate;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

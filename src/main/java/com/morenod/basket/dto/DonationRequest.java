@@ -1,29 +1,17 @@
-package com.morenod.basket.model;
+package com.morenod.basket.dto;
 
-import jakarta.persistence.*;
-import java.io.Serializable; 
-
-@Entity
-@Table(name = "donations")
-public class Donation implements Serializable {
-
-    // jvm expects version number to be long type
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+// data transfer object made to carry donation reuest data
+public class DonationRequest {
     private String itemName;
     private String category;
     private Integer quantity;
     private String dateEntered;
     private String status;
 
-    public Donation() {
+    public DonationRequest() {
     }
 
-    public Donation(Long id, String itemName, String category, Integer quantity, String dateEntered, String status) {
-        this.id = id;
+    public DonationRequest(String itemName, String category, Integer quantity, String dateEntered, String status) {
         this.itemName = itemName;
         this.category = category;
         this.quantity = quantity;
@@ -31,16 +19,19 @@ public class Donation implements Serializable {
         this.status = status;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters and Setters
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }
+
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
+
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
     public String getDateEntered() { return dateEntered; }
     public void setDateEntered(String dateEntered) { this.dateEntered = dateEntered; }
+
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 }

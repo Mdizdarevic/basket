@@ -187,7 +187,7 @@ public class DashboardController {
     }
 
     @FXML
-    private void handleCreate() {
+    public void handleCreate() {
         if (txtItemName.getText().isEmpty() || txtQuantity.getText().isEmpty()) {
             return;
         }
@@ -274,7 +274,7 @@ public class DashboardController {
     private String backupJsonData = null;
 
     @FXML
-    private void handleBackup() {
+    public void handleBackup() {
         System.out.println("Initiating database backup process...");
         
         HttpRequest request = HttpRequest.newBuilder()
@@ -298,7 +298,7 @@ public class DashboardController {
     }
 
     @FXML
-    private void handleRestore() {
+    public void handleRestore() {
         System.out.println("Initiating database restore process...");
         
         if (this.backupJsonData == null) {
@@ -328,7 +328,7 @@ public class DashboardController {
                 });
     }
     @FXML
-    private void handleRefresh() {
+    public void handleRefresh() {
         donationDataList.clear();
         loadDonationsFromApi();
     }

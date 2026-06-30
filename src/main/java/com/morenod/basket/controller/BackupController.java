@@ -1,6 +1,5 @@
 package com.morenod.basket.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +17,14 @@ import java.util.Map;
 @RequestMapping("/api/donations") 
 public class BackupController {
 
-    @Autowired
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     private static final String BACKUP_FILE_PATH = "backup.sql";
+
+    // construcotr instead of autowired
+    public BackupController(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @GetMapping("/backup") 
     public ResponseEntity<?> backupDatabase() {

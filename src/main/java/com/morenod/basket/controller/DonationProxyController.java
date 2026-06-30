@@ -1,7 +1,6 @@
 package com.morenod.basket.controller;
 
 import org.apache.camel.ProducerTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +11,12 @@ import java.util.Map;
 @RequestMapping("/api/proxy")
 public class DonationProxyController {
 
-    @Autowired
-    private ProducerTemplate producerTemplate;
+    // again constructor instead of autowired
+    private final ProducerTemplate producerTemplate;
+
+    public DonationProxyController(ProducerTemplate producerTemplate) {
+        this.producerTemplate = producerTemplate;
+    }
 
     //  proxy for PUT
     @PostMapping("/donations")
@@ -32,7 +35,9 @@ public class DonationProxyController {
         Object response = producerTemplate.requestBodyAndHeaders("direct:create", jsonPayload, headers);
         
         if (response != null && response.toString().contains("Access Denied")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response.toString());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .header("Content-Type", "text/plain; charset=utf-8")
+                    .body("Access Denied: The request was rejected.");
         }
         
         return ResponseEntity.ok("Status: Access Granted and POST request logged!");
@@ -54,7 +59,9 @@ public class DonationProxyController {
         Object response = producerTemplate.requestBodyAndHeaders("direct:create", jsonPayload, headers);
         
         if (response != null && response.toString().contains("Access Denied")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response.toString());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .header("Content-Type", "text/plain; charset=utf-8")
+                    .body("Access Denied: The request was rejected.");
         }
         
         return ResponseEntity.ok("Status: Access Granted and PUT request logged!");
@@ -76,7 +83,9 @@ public class DonationProxyController {
         Object response = producerTemplate.requestBodyAndHeaders("direct:create", "", headers);
         
         if (response != null && response.toString().contains("Access Denied")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response.toString());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .header("Content-Type", "text/plain; charset=utf-8")
+                    .body("Access Denied: The request was rejected.");
         }
         
         return ResponseEntity.ok("Status: Access Granted and GET request logged!");
@@ -100,7 +109,9 @@ public class DonationProxyController {
         Object response = producerTemplate.requestBodyAndHeaders("direct:create", payload, headers);
         
         if (response != null && response.toString().contains("Access Denied")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response.toString());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .header("Content-Type", "text/plain; charset=utf-8")
+                    .body("Access Denied: The request was rejected.");
         }
         
         return ResponseEntity.ok("Status: Access Granted and DELETE request logged!");
