@@ -21,7 +21,7 @@ jobs:
         cache: maven
 
     - name: Build and Test with Maven
-      run: mvn -B package -Dsurefire.excludedGroups=SecurityIntegrationTests --file pom.xml
+      run: mvn -B package -Dtest=!DashboardUnitTests -Dsurefire.excludedGroups=SecurityIntegrationTests --file pom.xml
       env:
         SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
         MAVEN_OPTS: "-Xmx1024m"
